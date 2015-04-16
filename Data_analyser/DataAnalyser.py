@@ -5,7 +5,7 @@ def main():
 	
 	parseReviewData = ParseReviewData(inputfile)
 
-	parseReviewData.parse()
+	parseReviewData.outputDataSet()
 
 
 if __name__ == '__main__':

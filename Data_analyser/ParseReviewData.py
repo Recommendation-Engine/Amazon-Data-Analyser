@@ -13,25 +13,48 @@ class ParseReviewData(object):
 	def getUserDic(self):
 		return self.__userDic
 
-	def parse(self):
+	def getStatDic(self):
+		return self.__stat
+
+	def parseDataSet(self):
 		self.filterOriginDataSet()
 		self.generateDic()
 		self.generateStatDic()
 		self.printResult()
 		self.deleteTempFiles()
 
-	def writeUserId(self, line, inputfile, outputfile):
+	def findUserId(self, line, inputfile):
 		while "review/userId:" not in line:
 			line = next(inputfile)
-		outputfile.write(line)
+		return line
+
+	def findScore(self, line, inputfile):
+		while "review/score:" not in line:
+			line = next(inputfile)
+		return line
 
 	def filterOriginDataSet(self):
 		with gzip.open(self.__input,'r') as inputfile:
 			with open(self.__filteredinput, 'wb') as outputfile:
 				for line in inputfile:
 					if "product/productId:" in line:
-						self.writeUserId(line,inputfile, outputfile)
+						outputfile.write(self.findUserId(line,inputfile))
 						outputfile.write(line + "\n")						
+
+	def outputDataSet(self):
+		with gzip.open(self.__input,'r') as inputfile:
+			with open("output"+self.__input+".txt", 'wb') as outputfile:
+				for line in inputfile:
+					if "product/productId:" in line:
+						userId = self.getId(self.findUserId(line,inputfile))
+						score = self.getId(self.findScore(line,inputfile))
+						productId = self.getId(line)
+
+						if userId == "unknown" or score == "unknown":
+							continue
+							
+						outputfile.write(productId + "\t" + userId + "\t"
+							+ score + "\n")
 
 	def generateDic(self):
 		with open(self.__filteredinput, 'r') as inputfile:

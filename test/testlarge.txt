@@ -1,0 +1,54 @@
+product/productId: B000GKXY4S
+product/title: Crazy Shape Scissor Set
+product/price: unknown
+review/userId: A1QA985ULVCQOB
+review/profileName: Carleen M. Amadio "Lady Dragonfly"
+review/helpfulness: 2/2
+review/score: 5.0
+review/time: 1314057600
+review/summary: Fun for adults too!
+review/text: I really enjoy these scissors for my inspiration books that I am making (like collage, but in books) and using these different textures these give is just wonderful, makes a great statement with the pictures and sayings. Want more, perfect for any need you have even for gifts as well. Pretty cool!
+
+product/productId: B000GKXY41
+product/title: Crazy Shape Scissor Set
+product/price: unknown
+review/userId: A1QA985ULVCQOB
+review/profileName: Carleen M. Amadio "Lady Dragonfly"
+review/helpfulness: 2/2
+review/score: 5.0
+review/time: 1314057600
+review/summary: Fun for adults too!
+review/text: I really enjoy these scissors for my inspiration books that I am making (like collage, but in books) and using these different textures these give is just wonderful, makes a great statement with the pictures and sayings. Want more, perfect for any need you have even for gifts as well. Pretty cool!
+
+product/productId: B000GKXY42
+product/title: Crazy Shape Scissor Set
+product/price: unknown
+review/userId: A1QA985ULVCQOB
+review/profileName: Carleen M. Amadio "Lady Dragonfly"
+review/helpfulness: 2/2
+review/score: 5.0
+review/time: 1314057600
+review/summary: Fun for adults too!
+review/text: I really enjoy these scissors for my inspiration books that I am making (like collage, but in books) and using these different textures these give is just wonderful, makes a great statement with the pictures and sayings. Want more, perfect for any need you have even for gifts as well. Pretty cool!
+
+product/productId: B000GKXY43
+product/title: Crazy Shape Scissor Set
+product/price: unknown
+review/userId: A1QA985ULVCQOB
+review/profileName: Carleen M. Amadio "Lady Dragonfly"
+review/helpfulness: 2/2
+review/score: 5.0
+review/time: 1314057600
+review/summary: Fun for adults too!
+review/text: I really enjoy these scissors for my inspiration books that I am making (like collage, but in books) and using these different textures these give is just wonderful, makes a great statement with the pictures and sayings. Want more, perfect for any need you have even for gifts as well. Pretty cool!
+
+product/productId: B000GKXY4S
+product/title: Crazy Shape Scissor Set
+product/price: unknown
+review/userId: A1QA985ULVCQOB
+review/profileName: Carleen M. Amadio "Lady Dragonfly"
+review/helpfulness: 2/2
+review/score: 5.0
+review/time: 1314057600
+review/summary: Fun for adults too!
+review/text: I really enjoy these scissors for my inspiration books that I am making (like collage, but in books) and using these different textures these give is just wonderful, makes a great statement with the pictures and sayings. Want more, perfect for any need you have even for gifts as well. Pretty cool!

@@ -1,18 +1,12 @@
 import sys, os, gzip
 sys.path.insert(0, '../Data_Analyser')
 
+from nose.tools import assert_equals
 from ParseReviewData import ParseReviewData
-import unittest
 
-class TestOutputDataSet(unittest.TestCase):
+class TestOutputDataSet:
 
-	def test(self):
-		source = """product/productId: B000GKXY4S
-product/title: Crazy Shape Scissor Set
-review/userId: A1QA985ULVCQOB
-review/score: 5.0
-review/text: I really enjoy these scissors"""
-		
+	def generate_output_with_source(self, source):
 		sourcefile = gzip.open("test.txt.gz",'wb')
 		sourcefile.write(source)
 		sourcefile.close()
@@ -20,71 +14,78 @@ review/text: I really enjoy these scissors"""
 		self.parseReviewData = ParseReviewData("test.txt.gz")
 		self.parseReviewData.outputDataSet()
 
+	def test_should_filter_unknown_value(self):
+		source = """product/productId: B000GKXY4S
+product/title: Crazy Shape Scissor Set
+review/userId: unknown
+review/score: unknown
+review/text: I really enjoy these scissors"""
+		self.generate_output_with_source(source)
+
 		with open("outputtest.txt.gz.txt",'r') as inputfile:
-			line = next(inputfile)
-			self.assertEqual(line,"B000GKXY4S\tA1QA985ULVCQOB\t5.0\n")
+			for line in inputfile:
+				assert_equals(line,'')
 
 		os.remove("test.txt.gz")
 		os.remove("outputtest.txt.gz.txt")
 
-class TestFilterOriginDataSet(unittest.TestCase):
+	def test_should_generate_correct_format(self):
+		source = """product/productId: B000GKXY4S
+product/title: Crazy Shape Scissor Set
+review/userId: A1QA985ULVCQOB
+review/score: 5.0
+review/text: I really enjoy these scissors"""
+		
+		self.generate_output_with_source(source)
 
-	def test_with_different_source(self):	
-		def test_with_source(source):
-			sourcefile = gzip.open("test.txt.gz",'wb')
-			sourcefile.write(source)
-			sourcefile.close()
+		with open("outputtest.txt.gz.txt",'r') as inputfile:
+			line = next(inputfile)
+			assert_equals(line,"B000GKXY4S\tA1QA985ULVCQOB\t5.0\n")
 
-			self.parseReviewData = ParseReviewData("test.txt.gz")
-			self.parseReviewData.filterOriginDataSet()
+		os.remove("test.txt.gz")
+		os.remove("outputtest.txt.gz.txt")
 
-			with open("filtertedtest.txt.gz.txt","r") as inputfile:
-				line = next(inputfile)
-				self.assertEqual(line.strip(),"review/userId: A1QA985ULVCQOB")
-				
-				line = next(inputfile)
-				self.assertEqual(line.strip(),"product/productId: B000GKXY4S")
+class TestFilterOriginDataSet:
+
+	def filter_with_source(self, source):
+		sourcefile = gzip.open("test.txt.gz",'wb')
+		sourcefile.write(source)
+		sourcefile.close()
+
+		self.parseReviewData = ParseReviewData("test.txt.gz")
+		self.parseReviewData.filterOriginDataSet()
+
+		with open("filtertedtest.txt.gz.txt","r") as inputfile:
+			line = next(inputfile)
+			assert_equals(line.strip(),"review/userId: A1QA985ULVCQOB")
 			
-			os.remove("filtertedtest.txt.gz.txt")
-			os.remove("test.txt.gz")
+			line = next(inputfile)
+			assert_equals(line.strip(),"product/productId: B000GKXY4S")
+		
+		os.remove("filtertedtest.txt.gz.txt")
+		os.remove("test.txt.gz")
 
+	def test_with_ordered_source(self):	
 		ordered_source = """product/productId: B000GKXY4S
 product/title: Crazy Shape Scissor Set
 review/userId: A1QA985ULVCQOB
 review/score: 5.0
 review/text: I really enjoy these scissors"""
+		
+		self.filter_with_source(ordered_source)
+	
+	def test_with_disordered_source(self):
 		disordered_source = """product/productId: B000GKXY4S
 product/title: Crazy Shape Scissor Set
 review/score: 5.0
 review/userId: A1QA985ULVCQOB
 review/text: I really enjoy these scissors"""
 		
-		test_with_source(ordered_source)
-		test_with_source(disordered_source)
-		
+		self.filter_with_source(disordered_source)
 
-class TestGenerateDic(unittest.TestCase):
+class TestGenerateDic:
 
-	def setUp(self):
-		source = """product/productId: B000GKXY4S
-review/userId: A1QA985ULVCQOB
-review/score: 5.0
-
-product/productId: B000GKXY41
-review/userId: A1QA985ULVCQOB
-review/score: 5.0
-
-product/productId: B000GKXY42
-review/userId: A1QA985ULVCQOB
-review/score: 5.0
-
-product/productId: B000GKXY43
-review/userId: A1QA985ULVCQOB
-review/score: 5.0
-
-product/productId: B000GKXY4S
-review/userId: A1QA985ULVCQOB
-review/score: 5.0"""
+	def filter_data_set(self,source):
 
 		sourcefile = gzip.open("test.txt.gz",'wb')
 		sourcefile.write(source)
@@ -93,36 +94,44 @@ review/score: 5.0"""
 		self.parseReviewData = ParseReviewData("test.txt.gz")
 		self.parseReviewData.filterOriginDataSet()
 
-	def tearDown(self):
+	def teardown(self):
 		os.remove("filtertedtest.txt.gz.txt")
 		os.remove("test.txt.gz")
 
-	def test_with_duplicate_product_id(self):
+	def test_should_ignore_duplicate_product_id(self):
+		source = """product/productId: B000GKXY4S
+review/userId: A1QA985ULVCQOB
+review/score: 5.0
+
+product/productId: B000GKXY4S
+review/userId: A1QA985ULVCQOB
+review/score: 5.0"""
+		self.filter_data_set(source)
+
 		self.parseReviewData.generateDic()
 
 		userDic = self.parseReviewData.getUserDic()
+		assert_equals(userDic.keys(), ['A1QA985ULVCQOB'])
+		assert_equals(len(userDic['A1QA985ULVCQOB']),1)
 
-		self.assertEqual(userDic.keys(), ['A1QA985ULVCQOB'])
-		self.assertEqual(len(userDic['A1QA985ULVCQOB']),4)
-
-class TestGenerateStatDic(unittest.TestCase):
-	def setUp(self):
+	def test_should_gernate_dic_correctly(self):
 		source = """product/productId: B000GKXY4S
 review/userId: A1QA985ULVCQOB
 review/score: 5.0
 
 product/productId: B000GKXY41
 review/userId: A1QA985ULVCQOB
-review/score: 5.0
-
-product/productId: B000GKXY43
-review/userId: A1QA985ULVCQO1
-review/score: 5.0
-
-product/productId: B000GKXY4S
-review/userId: A1QA985ULVCQO1
 review/score: 5.0"""
+		self.filter_data_set(source)
 
+		self.parseReviewData.generateDic()
+
+		userDic = self.parseReviewData.getUserDic()
+		assert_equals(userDic.keys(), ['A1QA985ULVCQOB'])
+		assert_equals(len(userDic['A1QA985ULVCQOB']),2)
+
+class TestGenerateStatDic:
+	def generate_user_dictionary(self, source):
 		sourcefile = gzip.open("test.txt.gz",'wb')
 		sourcefile.write(source)
 		sourcefile.close()
@@ -135,13 +144,41 @@ review/score: 5.0"""
 		os.remove("filtertedtest.txt.gz.txt")
 		os.remove("test.txt.gz")
 
-	def test_two_people_comment_on_two_different_products(self):
+	def test_with_two_people_comment_on_same_number_of_products(self):
+		source = """product/productId: B000GKXY4S
+review/userId: A1QA985ULVCQOB
+review/score: 5.0
+
+product/productId: B000GKXY4B
+review/userId: A1QA985ULVCQO1
+review/score: 5.0"""
+		self.generate_user_dictionary(source)
 		self.parseReviewData.generateStatDic()
 
 		statDic = self.parseReviewData.getStatDic()
+		print statDic
 
-		self.assertEqual(statDic.keys(), [2])
-		self.assertEqual(statDic[2],2)
+		assert_equals(statDic.keys(), [1])
+		assert_equals(statDic[1],2)
 
-if __name__ == '__main__':
-	unittest.main()
+	def test_with_two_people_comment_on_different_number_of_products(self):
+		source = """product/productId: B000GKXY4S
+review/userId: A1QA985ULVCQOB
+review/score: 5.0
+
+product/productId: B000GKXY4B
+review/userId: A1QA985ULVCQO1
+review/score: 5.0
+
+product/productId: B000GKXY41
+review/userId: A1QA985ULVCQO1
+review/score: 5.0"""
+		self.generate_user_dictionary(source)
+		self.parseReviewData.generateStatDic()
+
+
+		statDic = self.parseReviewData.getStatDic()
+
+		assert_equals(statDic.keys(), [1,2])
+		assert_equals(statDic[1],1)
+		assert_equals(statDic[2],1)

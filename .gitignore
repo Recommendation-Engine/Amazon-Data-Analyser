@@ -1,5 +1,4 @@
 *.pyc
 *.txt
 *.gz
-!/test/*.*
 *.DS_Store
